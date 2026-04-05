@@ -15,7 +15,7 @@ Make sure to select appropriate OS and to perform all steps till
 [Build the Blinky Sample](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#build-the-blinky-sample).
 
 created a workspace using the following file structure
-/home/jb/zeph-workspace/
+workspace/
 ├── deps
 │   ├── modules
 │   └── zephyr
