@@ -1,21 +1,79 @@
-choice 
-    prompt "LED blink speed"
-    default BLINK_SLEEP_TIME_1000MS
+menuconfig LED_SUBSYSTEM
+	bool "LED Subsystem"
+	default y
+	help
+	  Top-level enable for LED-related configuration used by this application.
 
-config  BLINK_SLEEP_TIME_250MS
-    bool "Fast"
-config  BLINK_SLEEP_TIME_1000MS
-    bool "Normal"
-config  BLINK_SLEEP_TIME_2000MS
-    bool "Slow"
+if LED_SUBSYSTEM
+
+choice BLINK_SLEEP_TIME_CHOICE
+	prompt "Blink sleep time"
+	default BLINK_SLEEP_TIME_500MS
+	help
+	  Selects the delay between LED toggles. The value is exposed as
+	  CONFIG_BLINK_SLEEP_TIME_MS (hidden int) for use in source code.
+
+config BLINK_SLEEP_TIME_250MS
+	bool "250 ms"
+
+config BLINK_SLEEP_TIME_500MS
+	bool "500 ms"
+
+config BLINK_SLEEP_TIME_1000MS
+	bool "1 s"
+
+config BLINK_SLEEP_TIME_2000MS
+	bool "2 s"
 
 endchoice
 
 config BLINK_SLEEP_TIME_MS
-    int
-    default 250 if BLINK_SLEEP_TIME_250MS 
-    default 1000 if BLINK_SLEEP_TIME_1000MS 
-    default 2000 if BLINK_SLEEP_TIME_2000MS
-    default 0
+	int
+	default 250 if BLINK_SLEEP_TIME_250MS
+	default 500 if BLINK_SLEEP_TIME_500MS
+	default 1000 if BLINK_SLEEP_TIME_1000MS
+	default 2000 if BLINK_SLEEP_TIME_2000MS
+	default 500
+
+menuconfig ADVANCED_LED_SETTINGS
+	bool "Advanced LED settings"
+	help
+	  Brightness and fade timing.
+
+if ADVANCED_LED_SETTINGS
+
+config LED_BRIGHTNESS
+	int "Brightness (percent)"
+	range 0 100
+	default 100
+	help
+	  LED brightness level from 0 (off) to 100 (full).
+
+config LED_FADE_MS
+	int "Fade duration (ms)"
+	range 0 5000
+	default 0
+	help
+	  Fade transition duration in milliseconds (0 disables fade).
+
+endif # ADVANCED_LED_SETTINGS
+
+config LED_EXPERT_SETTINGS
+	bool "Expert settings"
+	depends on ADVANCED_LED_SETTINGS
+	help
+	  When enabled, shows the Expert settings menu in menuconfig.
+
+menu "Expert settings"
+	depends on ADVANCED_LED_SETTINGS && LED_EXPERT_SETTINGS
+
+config LED_EXPERT_VERBOSE
+	bool "Verbose LED debug"
+	help
+	  Example option visible only when Expert settings is enabled.
+
+endmenu
+
+endif # LED_SUBSYSTEM
 
 source "Kconfig.zephyr"
