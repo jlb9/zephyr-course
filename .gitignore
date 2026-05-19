@@ -1,5 +1,7 @@
 # Build
 build
+.venv
+python_pkgs
 
 # West files
 .west

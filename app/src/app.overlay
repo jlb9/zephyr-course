@@ -1,0 +1,10 @@
+/ {
+	our_driver0: our_driver {
+		compatible = "iomico,our-driver";
+		status = "okay";
+	};
+
+	aliases {
+		our-driver = &our_driver0;
+	};
+};

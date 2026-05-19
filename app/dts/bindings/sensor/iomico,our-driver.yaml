@@ -1,0 +1,5 @@
+description: Iomico course custom sensor driver
+
+include: sensor-device.yaml
+
+compatible: "iomico,our-driver"

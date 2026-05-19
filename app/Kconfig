@@ -53,3 +53,4 @@ endmenu
 endif # LED_SUBSYSTEM
 
 source "Kconfig.zephyr"
+rsource "driver/our_driver/Kconfig"
