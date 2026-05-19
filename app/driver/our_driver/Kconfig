@@ -4,4 +4,4 @@ config OUR_DRIVER
 	depends on DT_HAS_IOMICO_OUR_DRIVER_ENABLED
 	select SENSOR
 	help
-	  Enable the custom iomico,our-driver sensor used by this application.
+	  Enable the custom iomico,our-driver sensor used by this application
