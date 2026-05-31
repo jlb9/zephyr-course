@@ -15,10 +15,6 @@ struct our_driver_config {
 	struct gpio_dt_spec led;
 };
 
-struct our_driver_data {
-	char label[16];
-	bool led_on;
-};
 
 static int sample_fetch_my_impl(const struct device *dev, enum sensor_channel chan)
 {
@@ -29,7 +25,7 @@ static int sample_fetch_my_impl(const struct device *dev, enum sensor_channel ch
 
 	data->led_on = true;
 	gpio_pin_set_dt(&cfg->led, 1);
-	LOG_INF("LED ON - %s", data->label);
+	LOG_INF("LED ON - %s", data->message[0] ? data->message : data->label);
 	return 0;
 }
 
@@ -60,12 +56,34 @@ static int our_driver_set_label_impl(const struct device *dev, const char *label
 	return 0;
 }
 
+static int our_driver_set_message_impl(const struct device *dev, const char *msg)
+{
+	struct our_driver_data *data = dev->data;
+
+	strncpy(data->message, msg, sizeof(data->message) - 1);
+	data->message[sizeof(data->message) - 1] = '\0';
+
+	LOG_INF("Message updated: %s", data->message);
+	return 0;
+}
+
+static int our_driver_set_toggle_count_impl(const struct device *dev, int count)
+{
+	struct our_driver_data *data = dev->data;
+
+	data->toggle_count = count;
+	LOG_INF("toggle_count set to %d", data->toggle_count);
+	return 0;
+}
+
 static const struct our_driver_api api_iomico_lecture = {
 	.sensor = {
 		.sample_fetch = sample_fetch_my_impl,
 		.channel_get = channel_get_my_impl,
 	},
 	.set_label = our_driver_set_label_impl,
+	.set_message = our_driver_set_message_impl,
+	.set_toggle_count = our_driver_set_toggle_count_impl,
 };
 
 static int our_driver_init(const struct device *dev)

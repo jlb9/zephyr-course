@@ -14,9 +14,9 @@ int main(void)
 		return -ENODEV;
 	}
 
-	our_driver_set_label(dev, "heartbeat");
+	our_driver_set_message(dev, "heartbeat");
 
-	printk("LED blinking (period %d ms). Shell: sensor fetch/read/info\n",
+	printk("LED blinking (period %d ms). Shell: sensor fetch/read/info/set/toggle\n",
 	       CONFIG_APP_HEARTBEAT_PERIOD_MS);
 
 	while (true) {
