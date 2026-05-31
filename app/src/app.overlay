@@ -1,10 +1,17 @@
+/*
+ * nRF52840 DK — iomico,our-driver on LED0 (P0.13, active-low).
+ * Applied via DTC_OVERLAY_FILE in CMakeLists.txt.
+ */
+
 / {
 	our_driver0: our_driver {
 		compatible = "iomico,our-driver";
+		gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
 		status = "okay";
 	};
 
 	aliases {
 		our-driver = &our_driver0;
+		led = &our_driver0;
 	};
 };

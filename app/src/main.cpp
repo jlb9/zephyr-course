@@ -1,38 +1,44 @@
 #include <zephyr/kernel.h>
-#include <zephyr/logging/log.h>
+#include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
+#include <our_driver.h>
 
-#include "our_driver.h"
+#define OUR_DRIVER_NODE DT_ALIAS(led)
 
-LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
+int main(void)
+{
+	const struct device *dev = DEVICE_DT_GET(OUR_DRIVER_NODE);
 
-namespace {
-    void turn_on_led() {
-        const struct device *driver = DEVICE_DT_GET(DT_NODELABEL(our_driver0));
-        auto ret = sensor_sample_fetch(driver);
-        LOG_INF("sample_fetch ret: %d", ret);
-    }
+	if (!device_is_ready(dev)) {
+		printk("Our driver not ready\n");
+		return -ENODEV;
+	}
 
-    void turn_off_led() {
-        const struct device *driver = DEVICE_DT_GET(DT_NODELABEL(our_driver0));
-        struct sensor_value val;
-        auto ret = sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
-        LOG_INF("channel_get ret: %d", ret);
-    }
-}
+	our_driver_set_label(dev, "heartbeat");
 
-int main(void) {
-    const struct device *driver = DEVICE_DT_GET(DT_NODELABEL(our_driver0));
+	printk("LED blinking (period %d ms). Shell: sensor fetch/read/info\n",
+	       CONFIG_APP_HEARTBEAT_PERIOD_MS);
 
-    our_driver_set_label(driver, "heartbeat-led");
+	while (true) {
+		struct sensor_value val;
+		int ret;
 
-    while (1) {
-        turn_on_led();
-        k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
+		ret = sensor_sample_fetch(dev);
+		if (ret < 0) {
+			printk("sample_fetch failed: %d\n", ret);
+			k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
+			continue;
+		}
+		k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS / 2);
 
-        turn_off_led();
-        k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
-    }
+		ret = sensor_channel_get(dev, SENSOR_CHAN_ALL, &val);
+		if (ret < 0) {
+			printk("channel_get failed: %d\n", ret);
+			k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS);
+			continue;
+		}
+		k_msleep(CONFIG_APP_HEARTBEAT_PERIOD_MS / 2);
+	}
 
-    return 0;
+	return 0;
 }

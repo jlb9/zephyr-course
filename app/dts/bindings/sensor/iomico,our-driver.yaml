@@ -1,5 +1,10 @@
 description: Iomico course custom sensor driver
 
-include: sensor-device.yaml
+include: base.yaml
 
 compatible: "iomico,our-driver"
+
+properties:
+  gpios:
+    type: phandle-array
+    required: true
