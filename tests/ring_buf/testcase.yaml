@@ -1,0 +1,3 @@
+tests:
+  ring_buf.unit:
+    tags: unit ring_buf
