@@ -1,0 +1,73 @@
+# Kconfig - Breathing LED Library
+
+config BREATHING_LED
+    bool "Enable breathing LED"
+    default n
+    help
+      Enable the breathing LED library, which fades a LED in and out
+      continuously to produce a breathing effect. It uses either a PWM led, or  WS2818 led.
+
+if BREATHING_LED
+
+config BREATHING_LED_CYCLE_MS
+    int "Breathing cycle time in milliseconds"
+    default 1000
+    range 500 3000
+    help
+      Duration of one full breathing cycle (fade in + fade out) in
+      milliseconds. Valid range is 500 ms (2 Hz) to 3000 ms (0.33 Hz).
+
+choice BREATHING_LED_TYPE
+    prompt "Breathing LED type"
+    default BREATHING_LED_TYPE_PWM
+    help
+      Select the type of LED used for the breathing effect.
+
+config BREATHING_LED_TYPE_PWM
+    bool "Standard LED with PWM"
+    depends on PWM
+    help
+      Use a standard LED driven by a PWM output.
+
+config BREATHING_LED_TYPE_WS2812
+    bool "WS2812 RGB LED"
+    depends on LED_STRIP
+    help
+      Use a WS2812 addressable RGB LED for the breathing effect.
+
+endchoice
+
+if BREATHING_LED_TYPE_WS2812
+
+choice BREATHING_LED_COLOR
+    prompt "Breathing color"
+    default BREATHING_LED_COLOR_WHITE
+    help
+      Select the color used for the WS2812 breathing effect.
+
+config BREATHING_LED_COLOR_WHITE
+    bool "White"
+
+config BREATHING_LED_COLOR_RED
+    bool "Red"
+
+config BREATHING_LED_COLOR_GREEN
+    bool "Green"
+
+config BREATHING_LED_COLOR_BLUE
+    bool "Blue"
+
+config BREATHING_LED_COLOR_CYAN
+    bool "Cyan"
+
+config BREATHING_LED_COLOR_MAGENTA
+    bool "Magenta"
+
+config BREATHING_LED_COLOR_YELLOW
+    bool "Yellow"
+
+endchoice
+
+endif # BREATHING_LED_TYPE_WS2812
+
+endif # BREATHING_LED

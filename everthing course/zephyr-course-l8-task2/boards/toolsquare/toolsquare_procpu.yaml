@@ -1,0 +1,17 @@
+identifier: toolsquare/esp32/procpu
+name: Toolsquare Control Unit PROCPU
+type: mcu
+arch: xtensa
+toolchain:
+  - zephyr
+supported:
+  - gpio
+  - i2c
+  - uart
+  - spi
+  - watchdog
+  - counter
+  - entropy
+  - nvs
+  - netif:wifi
+vendor: toolsquare

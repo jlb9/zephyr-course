@@ -25,3 +25,14 @@ workspace/
 └── zephyr-manifest
     └── west.yml
 
+---
+
+## Homework
+
+| Lesson | Task | Document |
+|--------|------|----------|
+| 6 | Task 1 — Custom driver (Sensor API) | [homework/l6-task1/README.md](homework/l6-task1/README.md) |
+| 6 | Task 2 — Custom extension API on driver | [homework/l6-task2/README.md](homework/l6-task2/README.md) |
+| 7 | Task 1 — Shell commands for custom driver | [homework/l7-task1/README.md](homework/l7-task1/README.md) |
+
+Submit homework via a [fork](https://github.com/iomico-public/zephyr-course/forks) of the upstream course repository. Push a git tag matching the task (`l6-task1`, `l6-task2`, `l7-task1`, …) and open a pull request to the upstream repo.

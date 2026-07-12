@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zephyr menuconfig</title>
+  <style>
+    :root { --bg:#f6f8fa; --card:#fff; --text:#1f2328; --muted:#656d76; --border:#d0d7de; --accent:#0969da; --code-bg:#eff1f3; }
+    body { font-family: system-ui, sans-serif; line-height:1.6; color:var(--text); background:var(--bg); margin:0; padding:2rem 1rem; }
+    .container { max-width:52rem; margin:0 auto; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:2rem; }
+    h1 { margin-top:0; border-bottom:1px solid var(--border); padding-bottom:.5rem; }
+    h2 { color:var(--accent); font-size:1.2rem; margin-top:1.75rem; }
+    pre, code { font-family: ui-monospace, monospace; font-size:.875rem; }
+    code { background:var(--code-bg); padding:.15em .35em; border-radius:4px; }
+    pre { background:var(--code-bg); border:1px solid var(--border); border-radius:6px; padding:1rem; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.95rem; }
+    th, td { border:1px solid var(--border); padding:.5rem .75rem; text-align:left; }
+    th { background:var(--code-bg); }
+    kbd { background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:.1em .35em; }
+    footer { margin-top:2rem; color:var(--muted); font-size:.85rem; border-top:1px solid var(--border); padding-top:1rem; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Opening menuconfig (Zephyr Kconfig)</h1>
+    <p>Change firmware options interactively (blink period, shell, drivers). Saves to <code>build/zephyr/.config</code>.</p>
+
+    <h2>Open menuconfig</h2>
+    <p><strong>app/</strong></p>
+    <pre>cd /home/jb/zeph-workspace/zephyr-course/app
+west build -t menuconfig</pre>
+    <p><strong>app_OG/</strong></p>
+    <pre>cd /home/jb/zeph-workspace/zephyr-course/app_OG
+west build -t menuconfig</pre>
+
+    <h2>First build (if needed)</h2>
+    <pre>west build -b nrf52840dk/nrf52840 .
+west build -t menuconfig</pre>
+
+    <h2>Keys</h2>
+    <table>
+      <tr><th>Key</th><th>Action</th></tr>
+      <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>Navigate</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Open / select</td></tr>
+      <tr><td><kbd>Space</kbd></td><td>Toggle option</td></tr>
+      <tr><td><kbd>/</kbd></td><td>Search (e.g. <code>APP_HEARTBEAT</code>)</td></tr>
+      <tr><td><kbd>S</kbd></td><td>Save</td></tr>
+      <tr><td><kbd>Q</kbd></td><td>Quit</td></tr>
+    </table>
+
+    <h2>Project options</h2>
+    <table>
+      <tr><th>Setting</th><th>Effect</th></tr>
+      <tr><td><code>APP heartbeat period (ms)</code></td><td>LED blink speed</td></tr>
+      <tr><td>Shell menu</td><td><code>CONFIG_SHELL</code> and related</td></tr>
+      <tr><td>Our Driver / LED Sensor</td><td>Custom driver enable</td></tr>
+    </table>
+
+    <h2>After changes</h2>
+    <pre>west build
+west flash</pre>
+
+    <h2>Or edit prj.conf</h2>
+    <pre>CONFIG_APP_HEARTBEAT_PERIOD_MS=1000
+CONFIG_SHELL=y</pre>
+
+    <footer>Workspace: /home/jb/zeph-workspace · See also: minicom-nrf52840-uart.md</footer>
+  </main>
+</body>
+</html>

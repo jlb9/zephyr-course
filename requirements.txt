@@ -1,0 +1,9 @@
+# Python packages required for `west build` (Zephyr runs scripts such as
+# gen_kobject_list.py using the same interpreter CMake selects, usually
+# `python3` on PATH — the same environment `west` uses).
+#
+# Install (pick one):
+#   pip3 install -r requirements.txt
+#   python3 -m pip install --user -r requirements.txt
+#
+pyelftools>=0.29

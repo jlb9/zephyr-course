@@ -1,0 +1,2 @@
+config BOARD_MUMO_V2
+	select SOC_STM32WLE5XX

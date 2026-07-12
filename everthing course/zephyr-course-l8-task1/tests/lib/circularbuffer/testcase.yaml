@@ -1,0 +1,10 @@
+tests:
+  lib.circularbuffer:
+    harness: ztest
+    platform_allow:
+      - native_sim
+    timeout: 10
+    tags:
+      - generic
+      - unit
+      - circularbuffer

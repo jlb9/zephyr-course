@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>minicom — nRF52840 DK UART Console</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #656d76;
+      --border: #d0d7de;
+      --accent: #0969da;
+      --code-bg: #eff1f3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 52rem;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem 2.25rem;
+      box-shadow: 0 1px 3px rgba(27, 31, 36, 0.06);
+    }
+    h1 { font-size: 1.75rem; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h2 { font-size: 1.25rem; margin-top: 2rem; color: var(--accent); }
+    p, li { font-size: 1rem; }
+    .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.875rem;
+    }
+    code {
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    th { background: var(--code-bg); }
+    kbd {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1em 0.35em;
+      font-family: inherit;
+      font-size: 0.9em;
+    }
+    ol.steps { padding-left: 1.25rem; }
+    ol.steps > li { margin-bottom: 1rem; }
+    .note {
+      background: #ddf4ff;
+      border: 1px solid #54aeff66;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+    }
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Connecting to the nRF52840 DK with minicom</h1>
+    <p class="meta">
+      View UART output and run Zephyr shell commands for the LED sensor app
+      (<code>zephyr-course/app</code>).<br>
+      <strong>Serial:</strong> 115200 baud, 8N1, no flow control.
+    </p>
+
+    <h2>Prerequisites</h2>
+    <ul>
+      <li>nRF52840 DK connected via USB</li>
+      <li>Firmware flashed (<code>west flash</code>)</li>
+      <li>minicom installed: <code>sudo apt install minicom</code></li>
+    </ul>
+
+    <h2>Step 1 — Find the serial port</h2>
+    <pre>ls -l /dev/ttyACM* /dev/ttyUSB* 2&gt;/dev/null
+dmesg | tail -20</pre>
+    <p>Common device: <code>/dev/ttyACM0</code> (use <code>ttyACM1</code> if you have multiple boards).</p>
+
+    <h2>Step 2 — Permissions (if needed)</h2>
+    <pre>sudo usermod -aG dialout $USER</pre>
+    <p>Log out and back in if you see “Permission denied”.</p>
+
+    <h2>Step 3 — Connect (quick start)</h2>
+    <pre>minicom -D /dev/ttyACM0 -b 115200</pre>
+    <p>Press the board <strong>RESET</strong> button if nothing appears.</p>
+
+    <h2>Step 4 — Save minicom settings (optional)</h2>
+    <ol class="steps">
+      <li>Run <code>sudo minicom -s</code></li>
+      <li><strong>Serial port setup</strong> → Device: <code>/dev/ttyACM0</code>, speed: <code>115200 8N1</code>, flow control: <strong>No</strong> for both hardware and software</li>
+      <li><strong>Save setup as dfl</strong> or save a named profile (e.g. <code>nrf52840</code>)</li>
+      <li><strong>Exit</strong>, then run <code>minicom</code> or <code>minicom nrf52840</code></li>
+    </ol>
+
+    <h2>Step 5 — Zephyr shell commands</h2>
+    <p>Expected prompt:</p>
+    <pre>uart:~$</pre>
+
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>sensor fetch</code></td><td>Turn LED0 on (P0.13)</td></tr>
+        <tr><td><code>sensor read</code></td><td>Turn LED0 off; print value</td></tr>
+        <tr><td><code>sensor info</code></td><td>Device name and ready state</td></tr>
+        <tr><td><code>help</code></td><td>List commands</td></tr>
+      </tbody>
+    </table>
+
+    <p>Example:</p>
+    <pre>uart:~$ sensor fetch
+fetch OK - LED on
+uart:~$ sensor read
+read OK - LED off, val=0.000000
+uart:~$ sensor info
+Device name : led_sensor
+Device ready: YES</pre>
+
+    <div class="note">
+      On boot, firmware blinks LED0 three times as a self-test, then waits for shell commands.
+    </div>
+
+    <h2>minicom shortcuts</h2>
+    <table>
+      <thead>
+        <tr><th>Action</th><th>Keys</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Menu</td><td><kbd>Ctrl</kbd>+<kbd>A</kbd>, then <kbd>Z</kbd></td></tr>
+        <tr><td>Quit</td><td><kbd>Ctrl</kbd>+<kbd>A</kbd>, then <kbd>X</kbd></td></tr>
+        <tr><td>Local echo</td><td><kbd>Ctrl</kbd>+<kbd>A</kbd>, then <kbd>E</kbd></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Troubleshooting</h2>
+    <table>
+      <thead>
+        <tr><th>Problem</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>No output</td><td>Check device path; press RESET; close other apps using the port</td></tr>
+        <tr><td>Permission denied</td><td>Add user to <code>dialout</code> (Step 2)</td></tr>
+        <tr><td>Garbled text</td><td>Use 115200 8N1</td></tr>
+        <tr><td><code>west flash</code> fails</td><td>Close minicom first</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Alternative: west attach</h2>
+    <pre>cd /home/jb/zeph-workspace/zephyr-course/app
+west attach</pre>
+    <p>Exit with <kbd>Ctrl</kbd>+<kbd>]</kbd>. Close before flashing.</p>
+
+    <h2>Workflow summary</h2>
+    <ol>
+      <li><code>west build</code> and <code>west flash</code></li>
+      <li>Close minicom before flashing</li>
+      <li><code>minicom -D /dev/ttyACM0 -b 115200</code></li>
+      <li>RESET if needed → run <code>sensor fetch</code> / <code>read</code> / <code>info</code></li>
+    </ol>
+
+    <footer>
+      Workspace: /home/jb/zeph-workspace · Board: nrf52840dk/nrf52840 · App: zephyr-course/app
+    </footer>
+  </main>
+</body>
+</html>

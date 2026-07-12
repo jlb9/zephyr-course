@@ -1,0 +1,11 @@
+description: LED Sensor
+
+compatible: "custom,led-sensor"
+
+include: base.yaml
+
+properties:
+  gpios:
+    type: phandle-array
+    required: true
+    description: GPIO connected to the LED used as a sensor output

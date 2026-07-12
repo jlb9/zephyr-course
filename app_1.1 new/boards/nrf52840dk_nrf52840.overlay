@@ -1,0 +1,18 @@
+/*
+ * L7 Task 1 — nRF52840 DK board overlay
+ *
+ * Instantiates the iomico,led-sensor custom driver on LED0 (P0.13, active-low).
+ * LED0 is the first of the four green LEDs on the nRF52840 DK (PCA10056).
+ */
+
+/ {
+    led_sensor_0: led_sensor {
+        compatible = "iomico,led-sensor";
+        gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+        status = "okay";
+    };
+
+    aliases {
+        led-sensor = &led_sensor_0;
+    };
+};

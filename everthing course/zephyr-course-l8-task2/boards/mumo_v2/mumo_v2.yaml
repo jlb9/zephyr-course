@@ -1,0 +1,18 @@
+identifier: mumo_v2
+name: Strooom Mumo V2
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 64
+flash: 256
+supported:
+  - counter
+  - gpio
+  - i2c
+  - nvs
+  - uart
+  - watchdog
+  - lora
+vendor: strooom

@@ -1,0 +1,7 @@
+config LED_SENSOR
+	bool "LED Sensor Driver"
+	default y
+	select SENSOR
+	help
+	  Enable the custom LED sensor driver. Calling sensor_sample_fetch
+	  turns the LED on; calling sensor_channel_get turns the LED off.

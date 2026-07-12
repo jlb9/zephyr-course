@@ -1,0 +1,6 @@
+config L6DRIVER
+    bool "Lesson 6 Custom Driver Assignment"
+    default y                                           # default is enabled...
+    depends on DT_HAS_STROOOM_L6DRIVER_ENABLED          # ...but only if some hardware uses it
+    help
+        enable/disable the custom driver for lesson 6 assignment

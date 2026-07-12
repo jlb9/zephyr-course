@@ -1,0 +1,6 @@
+board:
+  name: toolsquare
+  full_name: Toolsquare Control Unit
+  vendor: Toolsquare
+  socs:
+  - name: esp32
